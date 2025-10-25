@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: whistle-service
+spec:
+  type: ClusterIP
+  selector:
+    app: whistle
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 3000

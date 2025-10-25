@@ -1,0 +1,5 @@
+# backup_cron.yml - Example for AWS EventBridge or cron trigger
+# Trigger backup_db.sh daily at 2am UTC
+schedule: cron(0 2 * * ? *)
+target:
+  arn: arn:aws:lambda:YOUR_REGION:YOUR_ACCOUNT:function:RunBackupScript

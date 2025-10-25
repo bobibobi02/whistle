@@ -1,0 +1,9 @@
+model Event {
+  id         String   @id @default(cuid())
+  userId     String?
+  type       String
+  metadata   Json?
+  createdAt  DateTime @default(now())
+
+  user       User?    @relation(fields: [userId], references: [id])
+}

@@ -1,0 +1,23 @@
+# Normalize line endings
+* text=auto
+
+# Handle binary files properly
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.woff binary
+*.woff2 binary
+*.ttf binary
+*.eot binary
+
+# Prevent CRLF warnings for common text/code files
+*.ts text
+*.tsx text
+*.js text
+*.json text
+*.css text
+*.html text
+*.md text
+*.env text

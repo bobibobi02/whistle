@@ -1,0 +1,455 @@
+/* apps/web/styles/globals.css */
+
+/* 1) Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@500&display=swap');
+
+/* 2) Tailwind base/components/utilities */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ------------------------------------------------------------------
+   THEME TOKENS
+------------------------------------------------------------------ */
+:root {
+  --whistle-green: #22C55E;
+  --brand: var(--whistle-green);
+  --nav-h: 64px;
+
+  /* light */
+  --bg: #FFFAF0;
+  --text: #2E2E2E;
+  --surface: #FFFFFF;
+  --border: rgba(34,197,94,.20);
+  --border-hover: rgba(34,197,94,.28);
+  --shadow-1: 0 6px 16px rgba(16,185,129,.10);
+  --shadow-2: 0 10px 22px rgba(16,185,129,.16);
+
+  --input-bg: #F0FDF4;
+  --input-border: #A7F3D0;
+  --input-focus: #34D399;
+
+  --meta-pill-bg: #F0FDF4;
+  --meta-pill-text: #0F5132;
+
+  --btn-solid: #10B981;
+  --btn-solid-hover: #059669;
+
+  --feed-media-h: clamp(200px, 34vw, 360px);
+  --feed-media-h-sm: clamp(160px, 48vw, 280px);
+  --post-media-h: clamp(260px, 42vw, 520px);
+
+  --upload-stage-h: clamp(220px, 48vh, 520px);
+}
+
+html[data-theme="dark"] {
+  --bg: #0B1416;
+  --text: #D7DADC;
+  --surface: #111A1C;
+  --border: #223037;
+  --border-hover: #2B3D45;
+  --shadow-1: 0 8px 24px rgba(0,0,0,.35);
+  --shadow-2: 0 12px 32px rgba(0,0,0,.45);
+
+  --input-bg: #0F191B;
+  --input-border: #223037;
+  --input-focus: #4B5C64;
+
+  --meta-pill-bg: #141F22;
+  --meta-pill-text: #C2CBD0;
+
+  --btn-solid: #22C55E;
+  --btn-solid-hover: #1FAB5A;
+}
+
+/* ------------------------------------------------------------------
+   BASE
+------------------------------------------------------------------ */
+html, body {
+  margin: 0;
+  padding: 0;
+  background: var(--bg);
+  color: var(--text);
+  color-scheme: light dark;
+  font-family: 'Noto Sans', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+}
+* { box-sizing: border-box; }
+html[data-theme="dark"] *, html[data-theme="light"] * {
+  transition: background-color .20s ease, color .20s ease, border-color .20s ease, box-shadow .20s ease;
+}
+.small-muted { font-size: 12px; opacity: .8; }
+.error { color: #ef4444; font-size: 12px; }
+
+/* ------------------------------------------------------------------
+   NAVBAR
+------------------------------------------------------------------ */
+.navbar{ width:100%; background: var(--whistle-green); }
+.navbar .inner{ max-width:64rem; margin:0 auto; padding:.75rem 1rem; display:flex; align-items:center; justify-content:space-between; }
+.navbar .logo{ color:#fff; font-weight:800; font-size:1.875rem; text-decoration:none; }
+.navbar .nav-links{ display:flex; align-items:center; gap:16px; }
+.navbar a.link,.navbar button.link{
+  color:#000 !important; font-family:'Poppins',system-ui,sans-serif !important; font-weight:500 !important;
+  background:transparent !important; border:0 !important; text-decoration:none !important; cursor:pointer !important;
+  padding:0 !important; margin:0 !important; appearance:none !important; font-size:1rem !important;
+}
+.navbar a.link:hover,.navbar button.link:hover{ text-decoration:underline !important; text-underline-offset:4px !important; color:#333 !important; }
+
+.theme-toggle{
+  appearance:none; -webkit-appearance:none; -moz-appearance:none;
+  display:inline-flex; align-items:center; gap:.5rem;
+  padding:.35rem .75rem; border-radius:9999px;
+  border:2px solid #0E5132; background:rgba(255,255,255,.25); color:#0E5132;
+  font-weight:700; cursor:pointer; line-height:1; box-shadow:none; text-shadow:none;
+}
+.theme-toggle:hover{ background:rgba(255,255,255,.35); }
+.theme-toggle:focus-visible{ outline:2px solid #0E5132; outline-offset:2px; }
+.theme-toggle .icon{ display:inline-grid; place-items:center; width:1.1rem; height:1.1rem; }
+
+/* Generic “link button” style used in feed delete, etc. */
+.link {
+  background: transparent; border: 0; color: inherit; cursor: pointer;
+  padding: 0; font: inherit; text-decoration: none;
+}
+
+/* Back-to-feed chip */
+.back-link{
+  display:inline-flex; align-items:center; gap:.45rem;
+  border:1.5px solid var(--border); background:transparent; color:var(--text);
+  border-radius:9999px; padding:.45rem .75rem; font-weight:800; text-decoration:none;
+}
+.back-link:visited{ color: var(--text); }
+.back-link:hover{ border-color:var(--border-hover); box-shadow:var(--shadow-1); transform: translateY(-1px); }
+.back-link .arrow{ font-size:1.05em; }
+
+/* ------------------------------------------------------------------
+   FEED CARDS
+------------------------------------------------------------------ */
+.feed-wrap{ max-width:56rem; margin:24px auto; padding:0 16px; }
+.feed-list{ list-style:none; padding:0; margin:0; }
+.post-card{
+  background:var(--surface); border:1px solid var(--border); border-radius:18px;
+  padding:16px 18px; box-shadow:var(--shadow-1);
+  transition: box-shadow .18s ease, transform .18s ease, border-color .18s ease;
+}
+.post-card + .post-card{ margin-top:16px; }
+.post-card:hover{ box-shadow:var(--shadow-2); transform:translateY(-1px); border-color:var(--border-hover); }
+.post-head{ display:flex; align-items:center; gap:10px; margin-bottom:6px; }
+.post-avatar{ width:28px; height:28px; border-radius:999px; flex:0 0 auto; display:grid; place-items:center; overflow:hidden; background:transparent; filter:drop-shadow(0 0 4px rgba(34,197,94,.55)); }
+.post-user{ font-weight:600; color:#0a0a0a; }
+.post-time{ color:#666; font-size:14px; }
+html[data-theme="dark"] .post-user{ color:#E9F5EE; }
+html[data-theme="dark"] .post-time{ color:#9AB9AA; }
+.post-content{ color:#0c0c0c; font-size:17px; line-height:1.5; margin:8px 0 12px; white-space:pre-wrap; }
+html[data-theme="dark"] .post-content{ color:#DDEAE4; }
+.post-meta{ display:flex; align-items:center; gap:12px; }
+.meta-pill{ display:inline-flex; align-items:center; gap:6px; padding:.28rem .6rem; border:1px solid var(--whistle-green); background:var(--meta-pill-bg); color:var(--meta-pill-text); border-radius:999px; font-size:14px; }
+.view-link{ margin-left:auto; text-decoration:none; color:#0F5132; font-weight:600; }
+.view-link:hover{ text-decoration:underline; }
+
+/* ------------------------------------------------------------------
+   CREATE / FORMS
+------------------------------------------------------------------ */
+.create-wrap{ max-width:56rem; margin:24px auto; padding:0 16px; }
+.form-card{ background:var(--surface); border:1px solid var(--border); border-radius:18px; padding:18px; box-shadow:var(--shadow-1); }
+
+.form-card form{
+  display:grid;
+  grid-auto-rows:max-content;
+  row-gap:14px;
+}
+@media (min-width:768px){
+  .form-card form{ row-gap:16px; }
+}
+.form-card label{
+  display:block;
+  font-weight:800;
+  margin:6px 0 6px;
+}
+
+/* NEW: standalone label class (used on /signup and elsewhere) */
+.label{
+  display:block;
+  font-weight:800;
+  margin:6px 0 6px;
+}
+
+.input,.textarea{
+  width:100%;
+  border-radius:14px;
+  border:1.5px solid var(--input-border);
+  background:var(--input-bg);
+  padding:12px 14px;
+  font-size:16px;
+  color:var(--text);
+}
+
+/* NEW: better focus styles for inputs & textareas */
+.input:focus, .textarea:focus{
+  outline: none;
+  border-color: var(--input-focus);
+  box-shadow: 0 0 0 3px color-mix(in oklab, var(--input-focus) 30%, transparent);
+}
+
+.btn-solid{
+  appearance:none;
+  background:var(--btn-solid);
+  color:#fff;
+  border:0;
+  border-radius:9999px;
+  padding:10px 18px;
+  font-weight:700;
+  box-shadow:0 8px 18px rgba(16,185,129,.22);
+}
+.btn-solid:hover{ background:var(--btn-solid-hover); }
+/* NEW: disabled state */
+.btn-solid:disabled{ opacity:.6; cursor:not-allowed; }
+
+input[type="file"]:not(.show-native){
+  position:absolute !important;
+  width:1px !important; height:1px !important;
+  padding:0 !important; margin:-1px !important;
+  overflow:hidden !important;
+  clip:rect(0 0 0 0) !important; clip-path: inset(50%) !important;
+  white-space:nowrap !important; border:0 !important;
+}
+
+.file-control{ display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
+.file-trigger{
+  display:inline-flex; align-items:center; gap:8px;
+  border:1.5px solid var(--border); background:transparent; color:var(--text);
+  border-radius:9999px; padding:.5rem .85rem; font-weight:700; cursor:pointer;
+}
+.file-trigger:hover{ border-color:var(--border-hover); transform:translateY(-1px); }
+.file-name{ max-width:100%; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; opacity:.85; }
+
+/* Upload preview STAGE */
+.form-card .image-preview{
+  margin-top:10px;
+  margin-bottom:14px;
+  border:1px solid var(--border);
+  background:var(--surface);
+  border-radius:14px;
+  box-shadow:var(--shadow-1);
+  height: var(--upload-stage-h);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:8px;
+  overflow:hidden;
+  line-height:0;
+  position: relative;
+}
+.form-card .image-preview > img{
+  max-width:100%;
+  max-height:100%;
+  width:auto;
+  height:auto;
+  object-fit:contain;
+  object-position:center center;
+  display:block;
+  border-radius:10px;
+}
+.form-card .image-preview .remove-btn{
+  position:absolute;
+  right:12px;
+  bottom:12px;
+  border-radius:9999px;
+  padding:.42rem .8rem;
+  font-weight:800;
+  border:1px solid var(--border);
+  background: rgba(0,0,0,.55);
+  color:#fff;
+  cursor:pointer;
+}
+.form-card .image-preview .remove-btn:hover{ filter: brightness(1.08); }
+
+.form-card .preview-image,
+.form-card img.preview{
+  display:block; max-width:100%; height:auto; max-height:420px; object-fit:contain; border-radius:12px; margin-top:8px;
+}
+
+/* ------------------------------------------------------------------
+   MEDIA CONTAINMENT — view & feed
+------------------------------------------------------------------ */
+.post-media{
+  background:var(--surface); border:1px solid var(--border); border-radius:16px;
+  box-shadow:var(--shadow-1); overflow:hidden; margin:12px 0 16px;
+}
+.post-media-inner{
+  width:100%;
+  height:var(--post-media-h);
+  display:flex; align-items:center; justify-content:center;
+  padding:8px; line-height:0;
+  position: relative;
+  background: var(--surface);
+}
+.post-media-inner > *,
+.post-media .post-img{
+  max-width:100% !important;
+  max-height:100% !important;
+  width:auto !important;
+  height:auto !important;
+  object-fit:contain !important;
+  object-position:center center !important;
+  display:block;
+  border-radius:12px;
+}
+
+.feed-media{
+  margin:10px 0 8px; border:1px solid var(--border); background:var(--surface);
+  border-radius:14px; box-shadow:var(--shadow-1); overflow:hidden;
+}
+.feed-media-link{ display:block; text-decoration:none; color:inherit; }
+.feed-media-inner{
+  width:100%;
+  height:var(--feed-media-h);
+  display:flex; align-items:center; justify-content:center;
+  padding:8px; line-height:0;
+  position: relative;
+  background: var(--surface);
+}
+@media (max-width:640px){
+  .feed-media-inner{ height:var(--feed-media-h-sm); }
+}
+.feed-media-inner > *{
+  max-width:100% !important;
+  max-height:100% !important;
+  width:auto !important;
+  height:auto !important;
+  object-fit:contain !important;
+  object-position:center center !important;
+  display:block;
+  border-radius:12px;
+}
+
+/* ------------------------------------------------------------------
+   COMMENTS + chips
+------------------------------------------------------------------ */
+.comments{ margin-top:14px; display:flex; flex-direction:column; gap:10px; }
+.comment{ display:grid; grid-template-columns:36px 1fr; gap:12px; background:var(--surface); border:1px solid var(--border); border-radius:14px; padding:12px; box-shadow:var(--shadow-1); }
+.comment-avatar{ width:36px; height:36px; border-radius:999px; overflow:hidden; border:1px solid var(--border); display:grid; place-items:center; background: color-mix(in oklab, var(--surface) 85%, transparent); }
+.comment-avatar img{ width:100%; height:100%; object-fit:cover; }
+.comment-head{ display:flex; align-items:center; gap:8px; line-height:1; }
+.comment-username{ font-weight:800; color:var(--text); }
+.comment-time{ font-size:12px; color: color-mix(in oklab, var(--text) 60%, transparent); }
+.comment-body{ margin-top:6px; color:var(--text); opacity:.92; white-space:pre-wrap; word-wrap:break-word; }
+.comment-actions{ margin-top:8px; display:flex; align-items:center; gap:8px; }
+
+.chip{
+  background:transparent;
+  border:1.5px solid var(--whistle-green);
+  color:#0F5132;
+  border-radius:9999px;
+  padding:.45rem .75rem;
+  font-weight:600;
+  cursor:pointer;
+}
+.chip:hover{ box-shadow:var(--shadow-1); transform:translateY(-1px); }
+.chip.active,
+.chip[aria-pressed="true"]{
+  background: var(--whistle-green);
+  border-color: var(--whistle-green);
+  color: #062d1a;
+}
+html[data-theme="dark"] .chip{
+  background:color-mix(in oklab, var(--input-bg) 92%, transparent);
+  border-color:var(--border);
+  color:var(--text);
+}
+html[data-theme="dark"] .chip.active,
+html[data-theme="dark"] .chip[aria-pressed="true"]{
+  background: var(--btn-solid);
+  border-color: var(--btn-solid);
+  color: #0b0f15;
+}
+
+.meta-icon{ display:inline-flex; align-items:center; justify-content:center; width:28px; height:28px; border:1px solid var(--border); border-radius:999px; }
+.meta-icon:hover{ border-color:var(--border-hover); box-shadow:var(--shadow-1); transform:translateY(-1px); }
+
+.vp-center{ padding:18px 16px; }
+.vp-wrap{ max-width:56rem; margin:0 auto; }
+
+/* ------------------------------------------------------------------
+   PROFILE TABS BAR  (NON-STICKY BY DEFAULT)
+------------------------------------------------------------------ */
+.profile-tabs{
+  /* no sticky — it will scroll with the page */
+  position: relative;
+  top: auto;
+  z-index: auto;
+
+  background: transparent;
+  border-bottom: 1px solid var(--border);
+  padding: 8px 0 10px;
+  margin-bottom: 12px;
+
+  display: flex;
+  gap: 8px;
+}
+
+/* If you ever want sticky again, just add class "profile-tabs--sticky" on the element */
+.profile-tabs.profile-tabs--sticky{
+  position: sticky;
+  top: calc(var(--nav-h, 64px) + 8px);
+  z-index: 60;
+  background: var(--bg);
+  backdrop-filter: saturate(120%) blur(6px);
+}
+
+.profile-tabs .tab{
+  appearance: none;
+  cursor: pointer;
+  border-radius: 9999px;
+  border: 1.5px solid var(--border);
+  background: transparent;
+  color: var(--text);
+  font-weight: 800;
+  padding: .48rem .9rem;
+  display: inline-grid;
+  grid-auto-flow: column;
+  align-items: center;
+  gap: 8px;
+  transition: border-color .15s ease, background .15s ease, transform .08s ease;
+}
+.profile-tabs .tab:hover{ background: color-mix(in oklab, var(--surface) 86%, transparent); transform: translateY(-1px); }
+.profile-tabs .tab.active{
+  border-color: color-mix(in oklab, var(--brand) 70%, var(--border));
+  background: color-mix(in oklab, var(--surface) 92%, transparent);
+}
+.profile-tabs .badge{
+  border: 1.5px solid var(--border);
+  padding: 2px 8px;
+  border-radius: 9999px;
+  font-size: 12px;
+  line-height: 1;
+  font-weight: 900;
+}
+@media (max-width: 520px){
+  .profile-tabs .tab{ padding: .42rem .75rem; font-size: 14px; }
+  .profile-tabs .badge{ padding: 2px 6px; font-size: 11px; }
+}
+
+/* ------------------------------------------------------------------
+   TEXT OVERFLOW HARDENING
+   (prevents long text from crossing into neighbor cards)
+------------------------------------------------------------------ */
+.feed-list > li { min-width: 0; }
+.post-card { 
+  min-width: 0;
+  overflow: hidden;              /* clip anything that still tries to escape */
+}
+.post-card * { min-width: 0; }   /* allow flex/grid children to shrink */
+
+/* Force wrapping for typical text containers (override Tailwind whitespace utils) */
+.post-card p,
+.post-card .post-content,
+.post-card .content,
+.post-card .title,
+.post-card .post-title,
+.post-card [data-text],
+.post-card h1, .post-card h2, .post-card h3, .post-card h4 {
+  white-space: normal !important;
+  overflow-wrap: anywhere !important;
+  word-break: break-word !important;
+}

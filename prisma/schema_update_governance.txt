@@ -1,0 +1,22 @@
+model Proposal {
+  id          String    @id @default(cuid())
+  title       String
+  description String
+  createdBy   User      @relation(fields: [createdById], references: [id])
+  createdById String
+  createdAt   DateTime  @default(now())
+  votes       GovernanceVote[]
+  status      String    @default("open") // open, closed, executed
+}
+
+model GovernanceVote {
+  id          String    @id @default(cuid())
+  proposal    Proposal  @relation(fields: [proposalId], references: [id])
+  proposalId  String
+  voter       User      @relation(fields: [voterId], references: [id])
+  voterId     String
+  weight      Int       // token-weight or reputation
+  votedAt     DateTime  @default(now())
+
+  @@unique([proposalId, voterId])
+}

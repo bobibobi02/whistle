@@ -1,0 +1,92 @@
+/* styles/comments.css */
+/* Dark-friendly tokens (tweak to match your palette) */
+:root {
+  --c-border: #2e3a43;
+  --c-border-strong: #3a4a55;
+  --c-soft-bg: rgba(255,255,255,.03);
+  --c-soft-bg-strong: rgba(255,255,255,.06);
+  --c-text: #e6eef2;
+  --c-text-dim: #a8c3cf;
+  --c-chip-active-bg: #222;
+  --c-chip-active-border: #444;
+  --c-accent: #1f8b4c; /* send/save button */
+}
+
+/* Reset only our custom buttons so we don't wreck global styles */
+button.chip,
+button.btn-solid {
+  -webkit-appearance: none;
+  appearance: none;
+  background: none;
+  border: none;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+}
+
+/* Small pill button used for Like/Reply and Edit/Delete */
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 10px;
+  border: 1px solid var(--c-border);
+  border-radius: 10px;
+  background: transparent;
+  line-height: 1;
+  transition: background .15s ease, border-color .15s ease, transform .1s ease, opacity .15s ease;
+}
+.chip:hover { border-color: var(--c-border-strong); transform: translateY(-1px); }
+.chip.active { background: var(--c-chip-active-bg); color: #fff; border-color: var(--c-chip-active-border); }
+.chip:disabled { opacity: .6; cursor: not-allowed; }
+
+/* Solid primary button (Send / Save) */
+.btn-solid {
+  padding: 8px 12px;
+  border-radius: 10px;
+  background: var(--c-accent);
+  color: #fff;
+  font-weight: 700;
+  box-shadow: 0 2px 0 rgba(0,0,0,.25);
+  transition: filter .15s ease, transform .1s ease, opacity .15s ease;
+}
+.btn-solid:hover { filter: brightness(1.06); transform: translateY(-1px); }
+.btn-solid:disabled { opacity: .6; cursor: not-allowed; }
+
+/* Textareas inside comments */
+.textarea {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid var(--c-border);
+  border-radius: 10px;
+  background: var(--c-soft-bg);
+  color: var(--c-text);
+  resize: vertical;
+  min-height: 70px;
+}
+
+/* Little status pills (Loading…, No comments yet, etc.) */
+.meta-pill {
+  display: inline-block;
+  padding: 6px 12px;
+  border-radius: 9999px;
+  background: var(--c-soft-bg);
+  border: 1px solid var(--c-border);
+  color: var(--c-text-dim);
+  font-size: 12px;
+}
+
+/* Optional: thin thread guide line for nested replies */
+.comment-thread {
+  margin-left: 16px;
+  padding-left: 10px;
+  border-left: 2px solid var(--c-soft-bg-strong);
+}
+
+/* Accessible focus ring for keyboard users */
+.chip:focus-visible,
+.btn-solid:focus-visible,
+.textarea:focus-visible {
+  outline: 2px solid #6bb1ff;
+  outline-offset: 2px;
+}

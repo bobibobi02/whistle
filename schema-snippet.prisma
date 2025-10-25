@@ -1,0 +1,12 @@
+
+model Notification {
+  id        String   @id @default(cuid())
+  user      User     @relation(fields: [userId], references: [id])
+  userId    String
+  type      String
+  message   String
+  postId    String?
+  commentId String?
+  isRead    Boolean  @default(false)
+  createdAt DateTime @default(now())
+}

@@ -1,0 +1,5 @@
+model Post {
+  ...
+  isDraft    Boolean   @default(false)
+  publishAt  DateTime?
+}

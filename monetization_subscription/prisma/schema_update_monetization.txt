@@ -1,0 +1,20 @@
+model Subscription {
+  id             String   @id @default(cuid())
+  user           User     @relation(fields: [userId], references: [id])
+  userId         String   @unique
+  stripeCustomer String
+  stripeSubscriptionId String
+  status         String   // e.g., 'active', 'canceled'
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+}
+
+model Tip {
+  id        String   @id @default(cuid())
+  from      User     @relation("TipFrom", fields: [fromId], references: [id])
+  fromId    String
+  to        User     @relation("TipTo", fields: [toId], references: [id])
+  toId      String
+  amount    Int      // cents
+  createdAt DateTime @default(now())
+}

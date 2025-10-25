@@ -1,0 +1,5 @@
+model User {
+  ...
+  badge   String? // e.g. "Top Poster", "Moderator"
+  flair   String? // e.g. "JS Enthusiast"
+}

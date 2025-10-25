@@ -1,0 +1,19 @@
+model ModActionReview {
+  id             String    @id @default(cuid())
+  modAction      ModAction @relation(fields: [modActionId], references: [id])
+  modActionId    String
+  reviewer       User      @relation(fields: [reviewerId], references: [id])
+  reviewerId     String
+  agreed         Boolean   // true if reviewer agrees with action, false if disagrees
+  createdAt      DateTime  @default(now())
+
+  @@unique([modActionId, reviewerId])
+}
+
+// Add trust score to User
+model User {
+  // ... existing fields ...
+
+  modActionReviews ModActionReview[]
+  trustScore       Float     @default(0) // aggregated trust score
+}

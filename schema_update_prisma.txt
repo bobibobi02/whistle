@@ -1,0 +1,9 @@
+model SubforumRole {
+  id          String    @id @default(cuid())
+  user        User      @relation(fields: [userId], references: [id])
+  userId      String
+  subforum    Subforum  @relation(fields: [subforumName], references: [name])
+  subforumName String
+  role        String    // e.g., "ADMIN", "MODERATOR", "USER"
+  assignedAt  DateTime  @default(now())
+}

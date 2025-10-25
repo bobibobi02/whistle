@@ -1,0 +1,14 @@
+model Instance {
+  id          String   @id @default(cuid())
+  domain      String   @unique
+  publicKey   String
+  createdAt   DateTime @default(now())
+}
+
+model Follow {
+  id           String   @id @default(cuid())
+  followerId   String
+  followingId  String
+  status       String   // 'pending', 'accepted'
+  createdAt    DateTime @default(now())
+}

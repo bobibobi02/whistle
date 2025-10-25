@@ -1,0 +1,44 @@
+openapi: 3.0.0
+info:
+  title: Whistle API
+  version: 1.0.0
+servers:
+  - url: https://api.whistle.com
+paths:
+  /api/feed:
+    get:
+      summary: Get personalized feed
+      responses:
+        '200':
+          description: A list of posts
+  /api/post/{id}:
+    get:
+      summary: Get post details
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Post object
+  /api/post:
+    post:
+      summary: Create a new post
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                subforumName:
+                  type: string
+                title:
+                  type: string
+                content:
+                  type: string
+      responses:
+        '200':
+          description: Created post

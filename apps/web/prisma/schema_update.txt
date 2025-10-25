@@ -1,0 +1,34 @@
+model Experiment {
+  id          String    @id @default(cuid())
+  key         String    @unique
+  description String?
+  variants    Variant[]
+  createdAt   DateTime  @default(now())
+}
+
+model Variant {
+  id           String       @id @default(cuid())
+  experiment   Experiment   @relation(fields: [experimentId], references: [id])
+  experimentId String
+  key          String
+  weight       Int          @default(50) // allocation percentage
+  results      ExperimentResult[]
+}
+
+model ExperimentEnrollment {
+  id           String    @id @default(cuid())
+  userId       String
+  variant      Variant   @relation(fields: [variantId], references: [id])
+  variantId    String
+  enrolledAt   DateTime  @default(now())
+  @@unique([userId, variantId])
+}
+
+model ExperimentResult {
+  id           String   @id @default(cuid())
+  enrollment   ExperimentEnrollment @relation(fields: [enrollmentId], references: [id])
+  enrollmentId String
+  metric       String
+  value        Float
+  recordedAt   DateTime @default(now())
+}

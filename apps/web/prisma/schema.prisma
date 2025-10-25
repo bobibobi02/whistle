@@ -1,0 +1,122 @@
+// prisma/schema.prisma
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+//// ─────────────────────────
+//// Models
+//// ─────────────────────────
+
+model User {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  name         String?
+  passwordHash String?  // used by credentials auth & reset
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  // Relations
+  posts    Post[]
+  comments Comment[]
+  votes    Vote[]
+  saved    Saved[]
+}
+
+model Subforum {
+  // We keep name as the natural key used throughout the app
+  name        String  @id
+  title       String
+  description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  posts Post[]
+}
+
+model Post {
+  id           String   @id @default(cuid())
+  title        String
+  body         String?          // some code paths select "body"; keep optional for legacy content
+  mediaUrl     String?
+  imageUrls    Json      @default("[]") // stored as TEXT JSON in SQLite; default backfilled as '[]'
+  userEmail    String
+  subforumName String
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  // Relations
+  user     User     @relation(fields: [userEmail], references: [email], onDelete: Cascade)
+  subforum Subforum @relation(fields: [subforumName], references: [name], onDelete: Cascade)
+  comments Comment[]
+  votes    Vote[]
+  savedBy  Saved[]
+
+  @@index([createdAt])
+  @@index([subforumName, createdAt])
+}
+
+model Comment {
+  id        String   @id @default(cuid())
+  postId    String
+  userEmail String
+  parentId  String?
+  body      String   @default("") // we migrated from "content" -> "body"
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  post     Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+  user     User     @relation(fields: [userEmail], references: [email], onDelete: Cascade)
+  parent   Comment? @relation("CommentToComment", fields: [parentId], references: [id])
+  children Comment[] @relation("CommentToComment")
+
+  @@index([postId, createdAt])
+}
+
+model Vote {
+  id        String   @id @default(cuid())
+  userEmail String
+  postId    String
+  value     Int      // +1 or -1
+  createdAt DateTime @default(now())
+
+  // Relations
+  user User @relation(fields: [userEmail], references: [email], onDelete: Cascade)
+  post Post @relation(fields: [postId], references: [id], onDelete: Cascade)
+
+  @@unique([userEmail, postId]) // one vote per user/post
+  @@index([postId])
+}
+
+model Saved {
+  id        String   @id @default(cuid())
+  userEmail String
+  postId    String
+  createdAt DateTime @default(now())
+
+  // Relations
+  user User @relation(fields: [userEmail], references: [email], onDelete: Cascade)
+  post Post @relation(fields: [postId], references: [id], onDelete: Cascade)
+
+  @@unique([userEmail, postId])
+  @@index([postId])
+}
+
+//
+// NEW: used by /api/auth/reset/request for password reset flow
+//
+model PasswordResetToken {
+  id        String   @id @default(cuid())
+  email     String
+  token     String   @unique
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  @@index([email, createdAt])
+}

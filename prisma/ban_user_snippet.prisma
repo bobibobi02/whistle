@@ -1,0 +1,4 @@
+model User {
+  ...
+  banned Boolean @default(false)
+}

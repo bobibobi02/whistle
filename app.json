@@ -1,0 +1,30 @@
+{
+  "expo": {
+    "name": "Whistle",
+    "slug": "whistle",
+    "version": "1.0.0",
+    "sdkVersion": "49.0.0",
+    "orientation": "portrait",
+    "platforms": ["ios", "android", "web"],
+    "scheme": "whistleapp",
+    "entryPoint": "./index.js",
+    "icon": "./assets/icon.png",
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "cover",
+      "backgroundColor": "#ffffff"
+    },
+    "android": {
+      "package": "com.bobi02.whistle"
+    },
+    "ios": {
+      "bundleIdentifier": "com.bobi02.whistle"
+    },
+    "extra": {
+      "apiUrl": "https://your-domain.com",
+      "eas": {
+        "projectId": "1c9b1e72-7b52-4f51-81f2-0567af3dd9b7"
+      }
+    }
+  }
+}

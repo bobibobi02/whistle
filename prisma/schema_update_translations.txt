@@ -1,0 +1,20 @@
+model Translation {
+  id          String    @id @default(cuid())
+  locale      String
+  key         String    // e.g. "common.welcome" or a post/comment ID
+  text        String
+  author      User      @relation(fields: [authorId], references: [id])
+  authorId    String
+  createdAt   DateTime  @default(now())
+  reviews     TranslationReview[]
+}
+
+model TranslationReview {
+  id            String      @id @default(cuid())
+  translation   Translation @relation(fields: [translationId], references: [id])
+  translationId String
+  reviewer      User        @relation(fields: [reviewerId], references: [id])
+  reviewerId    String
+  approved      Boolean
+  createdAt     DateTime    @default(now())
+}

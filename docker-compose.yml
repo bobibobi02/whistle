@@ -1,0 +1,28 @@
+version: '3.8'
+services:
+  app:
+    build: .
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - NEXT_PUBLIC_API_URL=http://localhost:3000
+      - SENTRY_DSN=${SENTRY_DSN}
+    volumes:
+      - .:/app:delegated
+  redis:
+    image: redis:alpine
+    ports:
+      - "6379:6379"
+  prometheus:
+    image: prom/prometheus:latest
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    ports:
+      - "9090:9090"
+  sentry:
+    image: sentry:latest
+    environment:
+      - SENTRY_SECRET_KEY=${SENTRY_SECRET_KEY}
+    ports:
+      - "9000:9000"

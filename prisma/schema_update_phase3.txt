@@ -1,0 +1,10 @@
+model Message {
+  id        String   @id @default(cuid())
+  from      User     @relation("SentMessages", fields: [fromId], references: [id])
+  fromId    String
+  to        User     @relation("ReceivedMessages", fields: [toId], references: [id])
+  toId      String
+  body      String
+  createdAt DateTime @default(now())
+  read      Boolean  @default(false)
+}

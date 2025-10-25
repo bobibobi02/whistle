@@ -1,0 +1,114 @@
+/* src/styles/globals.css */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Light mode */
+body {
+  @apply bg-white text-neutral-900 font-sans;
+}
+
+/* Dark mode */
+.dark body {
+  @apply bg-neutral-900 text-white;
+}
+
+/* Global link style */
+a {
+  @apply text-blue-600 hover:text-pink-500 underline underline-offset-2;
+}
+
+/* Orange CTA */
+.btn-orange {
+  @apply bg-orange-500 text-white font-medium py-2 px-4 rounded-lg shadow-sm;
+}
+.btn-orange:hover {
+  @apply bg-yellow-400;
+}
+
+/* PostCard wrapper */
+.post-card-wrapper {
+  @apply bg-white border-2 border-teal-400 rounded-xl shadow-lg;
+}
+
+/* ================================
+   NAVBAR STYLES
+   ================================ */
+.navbar {
+  @apply w-full bg-emerald-500;
+}
+
+.navbar .inner {
+  @apply max-w-4xl mx-auto px-4 py-3 flex items-center justify-between;
+}
+
+.navbar .logo {
+  @apply text-white font-extrabold text-3xl no-underline;
+}
+
+.navbar .nav-links {
+  @apply flex items-center gap-4;
+}
+
+/* Anchors + Buttons in Navbar look identical */
+.navbar a.link,
+.navbar button.link {
+  color: #f59e0b !important; /* force orange */
+  font-weight: 700 !important;
+  background: transparent !important;
+  border: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  cursor: pointer !important;
+  text-decoration: none !important;
+  appearance: none !important;
+  font: inherit !important;
+  line-height: normal !important;
+}
+
+/* Hover underline */
+.navbar a.link:hover,
+.navbar button.link:hover {
+  text-decoration: underline !important;
+  text-underline-offset: 4px !important;
+}
+
+/* ================================
+   HOMEPAGE CTA PILL BUTTONS
+   ================================ */
+.cta {
+  -webkit-appearance: none;
+  appearance: none;
+  background: transparent !important;
+  border: 2px solid #34d399 !important;   /* emerald-400 */
+  border-radius: 9999px !important;       /* pill */
+  color: #059669 !important;              /* emerald-600 */
+  cursor: pointer;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  font-weight: 600 !important;            /* semibold */
+  line-height: 1 !important;
+  padding: 0.625rem 1.25rem !important;   /* ~py-2.5 px-5 */
+  text-decoration: none !important;       /* no underline */
+  box-shadow: 0 1px 2px rgba(0,0,0,0.06) !important;
+  transition: background-color 150ms ease, transform 150ms ease;
+}
+
+.cta:hover {
+  background: #ecfdf5 !important;         /* emerald-50 */
+  transform: translateY(-1px);
+}
+
+.cta:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(52, 211, 153, 0.35); /* emerald focus ring */
+}
+
+.cta-row {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 1rem !important;
+}
