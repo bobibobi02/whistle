@@ -1,0 +1,44 @@
+# dependencies
+node_modules/
+pnpm-lock.yaml
+package-lock.json
+
+# Next.js & build output
+.next/
+out/
+dist/
+coverage/
+storybook-static/
+build/
+
+# logs & misc
+*.log
+*.tmp
+.DS_Store
+
+# environment variables
+.env
+.env.*
+!.env.example
+
+# IDE / system files
+.vscode/
+.idea/
+*.swp
+Thumbs.db
+Desktop.ini
+
+# test output
+jest-results/
+test-results/
+cypress/videos/
+cypress/screenshots/
+
+# Docker
+docker-data/
+*.pid
+*.seed
+
+# misc generated files
+*.tsbuildinfo
+*.eslintcache
