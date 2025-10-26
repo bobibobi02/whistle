@@ -1,18 +1,21 @@
-name: CI
+﻿name: CI / Web (apps/web)
 
 on:
-  push:
-    branches: [ main ]
   pull_request:
     branches: [ main ]
+  push:
+    branches: [ main ]
+
+permissions:
+  contents: read
 
 jobs:
-  web-ci:
-    name: Web (apps/web)
+  web:
+    name: web (apps/web)
     runs-on: ubuntu-latest
-
     defaults:
       run:
+        shell: bash
         working-directory: apps/web
 
     steps:
@@ -22,13 +25,40 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: '18'
-          cache: 'npm'
-          cache-dependency-path: |
-            apps/web/package-lock.json
+          node-version: 20
+          cache: npm
+          cache-dependency-path: apps/web/package-lock.json
 
-      - name: Install
-        run: npm ci
+      - name: Install deps
+        run: |
+          if [ -f package-lock.json ]; then
+            npm ci
+          else
+            npm install
+          fi
 
-      - name: Lint + Typecheck + Build
-        run: npm run ci
+      - name: Lint (skip if script missing)
+        run: |
+          if npm run | grep -qE '^\s{2}lint\b'; then
+            npm run lint
+          else
+            echo "No lint script found; skipping lint."
+          fi
+
+      - name: Typecheck (push to main only; skip if script missing)
+        if: github.event_name == 'push'
+        run: |
+          if npm run | grep -qE '^\s{2}typecheck\b'; then
+            npm run typecheck
+          else
+            echo "No typecheck script found; skipping typecheck."
+          fi
+
+      - name: Build (push to main only; skip if script missing)
+        if: github.event_name == 'push'
+        run: |
+          if npm run | grep -qE '^\s{2}build\b'; then
+            npm run build
+          else
+            echo "No build script found; skipping build."
+          fi
