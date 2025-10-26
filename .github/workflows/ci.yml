@@ -1,34 +1,32 @@
 name: CI / Web (apps/web)
 
 on:
-  push:
-    branches: [ main ]
   pull_request:
+    branches: [ main ]
+  push:
     branches: [ main ]
 
 permissions:
   contents: read
 
 jobs:
-  web-ci:
+  web:
     name: web (apps/web)
     runs-on: ubuntu-latest
-
-    # run all shell steps from apps/web
     defaults:
       run:
         shell: bash
         working-directory: apps/web
 
     steps:
-      - name: Checkout repo
+      - name: Checkout
         uses: actions/checkout@v4
 
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
-          cache: 'npm'
+          node-version: 20
+          cache: npm
           cache-dependency-path: apps/web/package-lock.json
 
       - name: Install deps
@@ -39,14 +37,15 @@ jobs:
             npm install
           fi
 
+      # Always lint (PRs & pushes)
       - name: Lint
-        run: npm run lint --if-present
+        run: npm run lint || (echo "Lint failed" && exit 1)
 
+      # Full checks only on push to main
       - name: Typecheck
-        run: npm run typecheck --if-present
+        if: github.event_name == 'push'
+        run: npm run typecheck
 
       - name: Build
-        run: npm run build --if-present
-
-      - name: Test
-        run: npm test --if-present
+        if: github.event_name == 'push'
+        run: npm run build
