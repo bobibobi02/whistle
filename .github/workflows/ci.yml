@@ -1,4 +1,4 @@
-name: CI / Web (apps/web)
+﻿name: CI / Web (apps/web)
 
 on:
   pull_request:
