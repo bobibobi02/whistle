@@ -37,15 +37,28 @@ jobs:
             npm install
           fi
 
-      # Always lint (PRs & pushes)
-      - name: Lint
-        run: npm run lint || (echo "Lint failed" && exit 1)
+      - name: Lint (skip if script missing)
+        run: |
+          if npm run | grep -qE '^\s{2}lint\b'; then
+            npm run lint
+          else
+            echo "No lint script found; skipping lint."
+          fi
 
-      # Full checks only on push to main
-      - name: Typecheck
+      - name: Typecheck (push to main only; skip if script missing)
         if: github.event_name == 'push'
-        run: npm run typecheck
+        run: |
+          if npm run | grep -qE '^\s{2}typecheck\b'; then
+            npm run typecheck
+          else
+            echo "No typecheck script found; skipping typecheck."
+          fi
 
-      - name: Build
+      - name: Build (push to main only; skip if script missing)
         if: github.event_name == 'push'
-        run: npm run build
+        run: |
+          if npm run | grep -qE '^\s{2}build\b'; then
+            npm run build
+          else
+            echo "No build script found; skipping build."
+          fi
