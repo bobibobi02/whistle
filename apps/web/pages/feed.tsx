@@ -1,4 +1,4 @@
-// pages/feed.tsx
+﻿// pages/feed.tsx
 'use client';
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
@@ -172,7 +172,7 @@ export default function FeedPage() {
   // hook-driven pagination (stable loadMore inside)
   const { posts, hasMore, loading, cursor, loadMore, reset, setPosts } = useInfinitePosts(fetchFeedPage);
 
-  // 🔒 Always work with a safe array
+  // рџ”’ Always work with a safe array
   const safePosts: FeedPost[] = useMemo(
     () => (Array.isArray(posts) ? (posts as unknown as FeedPost[]) : []),
     [posts]
@@ -347,7 +347,7 @@ export default function FeedPage() {
   /* ---------- Render ---------- */
   return (
     <>
-      <Head><title>Whistle — Feed</title></Head>
+      <Head><title>Whistle вЂ” Feed</title></Head>
 
       <main className="feed-wrap">
         <header style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 12 }}>
@@ -356,7 +356,7 @@ export default function FeedPage() {
         </header>
 
         <ul className="feed-list" aria-live="polite">
-          {safePosts.map((post) => {
+          {safe(Array.isArray(posts) ? (posts as any[]) : []).map((post) => {
             const displayName = post.user?.name || 'user';
             const voted = voteMap[post.id] ?? null;
             const saved = savedMap[post.id] ?? !!post.saved;
@@ -378,7 +378,7 @@ export default function FeedPage() {
                       />
                     </span>
                     <span className="post-user">{displayName}</span>
-                    <span className="post-time">• {timeAgo(post.timestamp)}</span>
+                    <span className="post-time">вЂў {timeAgo(post.timestamp)}</span>
                   </div>
 
                   {/* title */}
@@ -444,7 +444,7 @@ export default function FeedPage() {
                       aria-label="Like"
                       style={{ borderColor: voted === 'up' ? BRAND : undefined, color: voted === 'up' ? BRAND : undefined }}
                     >
-                      <span aria-hidden>❤️</span><span>Like</span>
+                      <span aria-hidden>вќ¤пёЏ</span><span>Like</span>
                     </button>
 
                     <button
@@ -453,7 +453,7 @@ export default function FeedPage() {
                       title="Dislike"
                       aria-label="Dislike"
                     >
-                      <span aria-hidden>💔</span><span>Dislike</span>
+                      <span aria-hidden>рџ’”</span><span>Dislike</span>
                     </button>
 
                     <Link
@@ -463,11 +463,11 @@ export default function FeedPage() {
                       aria-label="Comments"
                       style={{ textDecoration: 'none' }}
                     >
-                      <span aria-hidden>💬</span><span>Comments</span>
+                      <span aria-hidden>рџ’¬</span><span>Comments</span>
                     </Link>
 
                     <button className="chip" onClick={() => share(post.id)} title="Share" aria-label="Share">
-                      <span aria-hidden>🔗</span><span>Share</span>
+                      <span aria-hidden>рџ”—</span><span>Share</span>
                     </button>
 
                     <button
@@ -476,11 +476,11 @@ export default function FeedPage() {
                       title={saved ? 'Saved' : 'Save'}
                       aria-label={saved ? 'Unsave' : 'Save'}
                     >
-                      <span aria-hidden>🔖</span><span>{saved ? 'Saved' : 'Save'}</span>
+                      <span aria-hidden>рџ”–</span><span>{saved ? 'Saved' : 'Save'}</span>
                     </button>
 
                     <span className="meta-pill" style={{ marginLeft: 'auto' }}>
-                      ❤️ {getScore(post)} • 💬 {post.commentsCount}
+                      вќ¤пёЏ {getScore(post)} вЂў рџ’¬ {post.commentsCount}
                     </span>
                   </div>
                 </article>
@@ -492,12 +492,14 @@ export default function FeedPage() {
         {/* sentinel + fixed-height status row */}
         <div ref={sentinelRef} style={{ height: 1 }} aria-hidden="true" />
         <div style={{ height: 36, display: 'grid', placeItems: 'center', opacity: 0.9 }}>
-          {loading && hasMore && <div className="small-muted">Loading…</div>}
+          {loading && hasMore && <div className="small-muted">LoadingвЂ¦</div>}
           {!loading && !hasMore && safePosts.length > 0 && (
-            <div className="small-muted" style={{ opacity: 0.75 }}>You’ve reached the end</div>
+            <div className="small-muted" style={{ opacity: 0.75 }}>YouвЂ™ve reached the end</div>
           )}
         </div>
       </main>
     </>
   );
 }
+
+

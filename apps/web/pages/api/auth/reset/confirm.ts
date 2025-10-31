@@ -1,58 +1,40 @@
-// pages/api/auth/reset/confirm.ts
-import type { NextApiRequest, NextApiResponse } from "next";
-import jwt from "jsonwebtoken";
-import bcrypt from "bcrypt";
-import { PrismaClient } from "@prisma/client";
-
-const prisma = new PrismaClient();
-const MIN_PASSWORD_LEN = 8;
+// apps/web/pages/api/auth/reset/confirm.ts
+import type { NextApiRequest, NextApiResponse } from 'next';
+import bcrypt from 'bcryptjs';
+import prisma from '@/lib/prismadb';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  if (req.method !== "POST") return res.status(405).json({ error: "Method not allowed" });
+  if (req.method !== 'POST') return res.status(405).json({ ok: false, error: 'Method not allowed' });
+
+  const email = String(req.body?.email || '').trim().toLowerCase();
+  const token = String(req.body?.token || '').trim();
+  const newPassword = String(req.body?.password || '');
+
+  if (!email || !token || newPassword.length < 8) {
+    return res.status(400).json({ ok: false, error: 'Invalid payload' });
+  }
 
   try {
-    const { token, password } = req.body || {};
-    if (!token || typeof token !== "string") return res.status(400).json({ error: "Missing token" });
-    if (!password || typeof password !== "string") {
-      return res.status(400).json({ error: "Missing password" });
-    }
-    if (password.length < MIN_PASSWORD_LEN) {
-      return res.status(400).json({ error: `Password must be at least ${MIN_PASSWORD_LEN} characters` });
+    const record = await prisma.passwordResetToken.findFirst({
+      where: { email, token },
+    });
+    if (!record || record.expiresAt < new Date()) {
+      return res.status(400).json({ ok: false, error: 'Invalid or expired token' });
     }
 
-    const secret = process.env.NEXTAUTH_SECRET;
-    if (!secret) {
-      console.error("Missing NEXTAUTH_SECRET");
-      return res.status(500).json({ error: "Server misconfigured" });
-    }
+    const passwordHash = await bcrypt.hash(newPassword, 10);
 
-    // Verify & decode token (contains email, optional redirectTo, and exp)
-    let decoded: any;
-    try {
-      decoded = jwt.verify(token, secret);
-    } catch {
-      return res.status(400).json({ error: "Invalid or expired token" });
-    }
-
-    const email = decoded?.email as string | undefined;
-    if (!email) return res.status(400).json({ error: "Invalid token payload" });
-
-    // Hash and save
-    const hash = await bcrypt.hash(password, 10);
-
-    const updated = await prisma.user.update({
+    // IMPORTANT: update `passwordHash`, not `password`
+    await prisma.user.update({
       where: { email },
-      data: { password: hash },
-      select: { id: true, email: true },
+      data: { passwordHash },
     });
 
-    // Optional: support redirectTo if your frontend wants to navigate after success
-    const redirectTo = typeof decoded?.redirectTo === "string" ? decoded.redirectTo : null;
+    // Burn the token
+    await prisma.passwordResetToken.deleteMany({ where: { email } }).catch(() => {});
 
-    return res.json({ ok: true, user: updated, redirectTo });
-  } catch (err: any) {
-    console.error("reset/confirm error:", err?.message || err);
-    // Normalize error to avoid leaking details
-    return res.status(500).json({ error: "Failed to reset password" });
+    return res.status(200).json({ ok: true });
+  } catch (err) {
+    return res.status(500).json({ ok: false, error: 'Server error' });
   }
 }
