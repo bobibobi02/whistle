@@ -1,44 +1,26 @@
-# dependencies
+﻿# dependencies / build
 node_modules/
-pnpm-lock.yaml
-package-lock.json
-
-# Next.js & build output
 .next/
-out/
+.turbo/
 dist/
-coverage/
-storybook-static/
-build/
+.vercel/
 
-# logs & misc
-*.log
-*.tmp
-.DS_Store
-
-# environment variables
+# env & local DB
 .env
 .env.*
-!.env.example
+prisma/*.db
+prisma/*.db-journal
 
-# IDE / system files
-.vscode/
-.idea/
-*.swp
+# logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# uploads (optional – keeps repo small)
+apps/web/public/uploads/
+
+# OS/IDE
+.DS_Store
 Thumbs.db
-Desktop.ini
-
-# test output
-jest-results/
-test-results/
-cypress/videos/
-cypress/screenshots/
-
-# Docker
-docker-data/
-*.pid
-*.seed
-
-# misc generated files
-*.tsbuildinfo
-*.eslintcache
+.vscode/
